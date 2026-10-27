@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mintatető Kft. · tetőfedés, napelem, bádogozás</title></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: fotós hero, szerkezet-szekció, görgetésre szétnyíló valósághű tetőrétegek (canvas), szlogen-sáv, napelemes cserép fotós csúszka, hover-képes szolgáltatáslista, árbecslő, vélemény-karusszel, GYIK, ajánlatkérő. */
+:root{
+  --bg:#eceeed; --surface:#ffffff; --ink:#0f1a22; --muted:#53606a; --line:#d3d9dc;
+  --accent:#ffb020; --on-accent:#111a22; --atext:#9a4a00; --accent-soft:#fff0d1;
+  --hi:#f4f7f8; --night:#08111c; --night2:#10283a;
+  --f-display:"Big Shoulders Display","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Hanken Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1117; --surface:#131d26; --ink:#e9eef1; --muted:#93a1ab; --line:#25323c;
+  --atext:#ffb020; --accent-soft:#2a2112; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1117; --surface:#131d26; --ink:#e9eef1; --muted:#93a1ab; --line:#25323c;
+  --atext:#ffb020; --accent-soft:#2a2112; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:clip}
+.in{max-width:1120px;margin:0 auto}
+.bleed{margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;line-height:.95;margin:0;text-wrap:balance;text-transform:uppercase;letter-spacing:.005em}
+h2{font-size:clamp(2.2rem,5.6vw,3.8rem)}
+h3{font-size:1.6rem;line-height:1}
+p{margin:0}
+a{color:var(--atext)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.tag{font:500 .74rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-block;font:600 1rem var(--f-body);background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:14px 26px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:inherit;border:1.5px solid currentColor}
+.demo{background:#000;color:#e9eef1;font-size:.8rem;padding:8px max(16px,env(safe-area-inset-left,0px));text-align:center;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+.demo b{font:500 .78rem var(--f-mono);letter-spacing:.06em;color:var(--accent)}
+.ph{position:relative;overflow:hidden}
+.ph img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;color:var(--hi);background:var(--night);min-height:min(100svh,860px);display:flex;flex-direction:column}
+.hero .bg{position:absolute;inset:-4% 0;will-change:transform}
+.hero .bg img{width:100%;height:100%;object-fit:cover;object-position:62% 40%;animation:kb 18s ease-out both}
+@keyframes kb{from{transform:scale(1.12)}to{transform:scale(1)}}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(6,14,26,.9) 0%,rgba(6,14,26,.62) 52%,rgba(6,14,26,.12) 100%),radial-gradient(560px 380px at var(--mx,78%) var(--my,22%),rgba(255,176,32,.30),transparent 70%)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:1;background:linear-gradient(180deg,transparent,var(--bg));pointer-events:none}
+.hero .in{position:relative;z-index:2;width:100%;flex:1;display:flex;flex-direction:column}
+.nav{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-block:18px}
+.logo{font:800 1.5rem var(--f-display);text-transform:uppercase;letter-spacing:.06em;display:flex;gap:10px;align-items:center}
+.logo svg{width:30px;height:30px}
+.nav nav{display:flex;gap:22px;font-size:.92rem}
+.nav nav a{color:var(--hi);text-decoration:none;opacity:.85}
+.nav nav a:hover{opacity:1}
+.tel{font:500 .9rem var(--f-mono)}
+.hbody{flex:1;display:flex;flex-direction:column;justify-content:center;padding-block:24px 110px}
+h1{font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:clamp(3.4rem,9vw,7.4rem);line-height:.86;margin:0}
+h1 .ln{display:block;overflow:hidden;padding:.3em 0 .06em;margin-top:-.3em;pointer-events:none}
+h1 .ln>span{display:block;animation:rise .95s cubic-bezier(.2,.8,.2,1) both}
+h1 .ln:nth-child(2)>span{animation-delay:.1s}
+h1 .ln:nth-child(3)>span{animation-delay:.2s;color:var(--accent)}
+@keyframes rise{from{transform:translateY(42%)}to{transform:none}}
+.lead{font-size:clamp(1.05rem,2.2vw,1.35rem);max-width:27em;margin-top:22px;color:rgba(244,247,248,.9)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.facts{position:absolute;z-index:2;right:max(16px,env(safe-area-inset-right,0px));bottom:46px;display:flex;gap:1px;background:rgba(255,255,255,.18);border-radius:14px;overflow:hidden;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.facts div{background:rgba(8,17,28,.55);padding:14px 20px}
+.facts b{display:block;font:800 1.9rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.facts span{font-size:.78rem;opacity:.85}
+
+/* MARQUEE */
+.mq{overflow:hidden;border-block:1px solid var(--line);background:var(--surface);padding:0}
+.mq div{display:flex;width:max-content;animation:mq 38s linear infinite}
+.mq span{font:800 1.5rem var(--f-display);text-transform:uppercase;letter-spacing:.06em;padding:14px 26px;white-space:nowrap}
+.mq span:nth-child(even){color:var(--atext)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+section.b{padding-block:80px}
+.hd{display:grid;gap:12px;max-width:40em;margin-bottom:36px}
+.hd p{color:var(--muted)}
+
+/* SZERKEZET split */
+.split{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:center}
+.split .ph{aspect-ratio:3/4;border-radius:18px}
+.split .ph img{height:116%;will-change:transform}
+.split ul{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:14px}
+.split li{display:grid;grid-template-columns:34px 1fr;gap:12px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted)}
+.split li b{font:500 .85rem var(--f-mono);color:var(--atext)}
+.split li strong{color:var(--ink);font-weight:600}
+
+/* STACK */
+.stackwrap{height:420vh;position:relative;background:radial-gradient(70% 60% at 30% 45%,#17384b,var(--night) 75%);color:var(--hi)}
+.pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:1.15fr .85fr;gap:10px;align-items:center;padding-block:16px}
+.stack{display:block;width:100%;height:auto;max-height:calc(100svh - 32px);aspect-ratio:900/820}
+.stackwrap .tag{color:rgba(244,247,248,.65)}
+.leg{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.leg li{display:grid;grid-template-columns:40px 1fr;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid transparent;opacity:.5;transition:opacity .2s,background .2s}
+.leg li[aria-current="true"]{opacity:1;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
+.leg b{font:500 .85rem var(--f-mono);color:var(--accent);padding-top:3px}
+.leg strong{display:block;font:800 1.3rem/1 var(--f-display);text-transform:uppercase}
+.leg span{color:rgba(244,247,248,.75);font-size:.88rem;display:none}
+.leg li[aria-current="true"] span{display:block}
+.stackwrap small{display:block;margin-top:12px;color:rgba(244,247,248,.55);font-size:.78rem}
+
+/* SZLOGEN SÁV */
+.band{position:relative;overflow:hidden;color:#fff;padding-block:clamp(110px,18vw,200px);text-align:left}
+.band .bg{position:absolute;inset:-18% 0}
+.band .bg img{width:100%;height:100%;object-fit:cover}
+.band::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,17,28,.72),rgba(8,17,28,.5) 50%,rgba(8,17,28,.78))}
+.band .in{position:relative;z-index:2}
+.band h2{font-size:clamp(2.6rem,8vw,6.6rem);line-height:.9;max-width:11em}
+.band p{font:800 clamp(1.5rem,3.6vw,2.6rem)/1.05 var(--f-display);text-transform:uppercase;margin-top:22px;max-width:22em;color:var(--accent)}
+
+/* PV TILE */
+.pvs{background:var(--surface);border-block:1px solid var(--line)}
+.cmp{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/9;background:var(--night);--x:50%;user-select:none;touch-action:pan-y}
+.cmp .l,.cmp .r{position:absolute;inset:0}
+.cmp .r{clip-path:inset(0 0 0 var(--x))}
+.cmp img{width:100%;height:100%;object-fit:cover;display:block}
+.cmp .h{position:absolute;top:0;bottom:0;left:var(--x);width:2px;background:var(--hi);transform:translateX(-1px);pointer-events:none}
+.cmp .h::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:1.2rem}
+.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.cmp:focus-within{outline:2px solid var(--accent);outline-offset:3px}
+.cmp .cap{position:absolute;top:14px;font:500 .74rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hi);background:rgba(0,0,0,.55);padding:6px 10px;border-radius:999px;pointer-events:none}
+.cmp .cap.a{left:14px}.cmp .cap.c{right:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:30px}
+.two ul{margin:10px 0 0;padding-left:1.1em;color:var(--muted)}
+.two li{margin-bottom:6px}
+.note{margin-top:22px;padding:14px 18px;border-radius:10px;background:var(--accent-soft);font-size:.92rem}
+
+/* OFFERS (hover-képes lista) */
+.offers{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.offers li{border-bottom:1px solid var(--line)}
+.offers a{display:grid;grid-template-columns:70px 1fr 1.3fr 40px;gap:18px;align-items:center;padding:30px 4px;text-decoration:none;color:var(--ink);position:relative;transition:padding .35s cubic-bezier(.2,.8,.2,1)}
+.offers a::before{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--accent);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.offers a:hover,.offers a:focus-visible{padding-left:18px}
+.offers a:hover::before,.offers a:focus-visible::before{width:100%}
+.offers .n{font:500 .85rem var(--f-mono);color:var(--atext)}
+.offers .t{font:800 clamp(1.8rem,4.4vw,3.2rem)/1 var(--f-display);text-transform:uppercase}
+.offers .d{color:var(--muted);font-size:.95rem}
+.offers .ar{font-size:1.6rem;transition:transform .3s}
+.offers a:hover .ar{transform:translateX(6px)}
+.offers .inl{display:none}
+.peek{position:fixed;left:0;top:0;width:min(340px,30vw);aspect-ratio:4/3;z-index:20;pointer-events:none;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.4);clip-path:inset(0 0 100% 0 round 12px);transition:clip-path .45s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.peek.on{clip-path:inset(0 0 0 0 round 12px)}
+.peek img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.12);transition:opacity .35s,transform .6s}
+.peek img.on{opacity:1;transform:none}
+
+/* ESTIMATOR */
+.estg{display:grid;grid-template-columns:.9fr 1.1fr;gap:36px;align-items:center}
+.est{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:26px;display:grid;gap:16px}
+label{display:grid;gap:6px;font-size:.85rem;color:var(--muted);font-weight:500}
+select,input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 13px;width:100%}
+.est select{background:var(--surface)}
+input[type=range]{padding:0;accent-color:var(--accent);background:transparent;border:0}
+.row2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.row2 output{font:500 .95rem var(--f-mono);color:var(--ink)}
+.out{background:var(--accent-soft);border-radius:12px;padding:16px 18px;display:grid;gap:2px}
+.out .p{font:800 2.3rem/1.05 var(--f-display);font-variant-numeric:tabular-nums}
+.out .s{font-size:.82rem;color:var(--muted)}
+
+/* VÉLEMÉNYEK karusszel */
+.tst{background:#0b1117;color:#e9eef1;padding-block:90px}
+.tst .tag{color:rgba(233,238,241,.6)}
+.tst h2{margin:10px 0 36px}
+.track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-block:6px;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,calc(50% - 320px));-webkit-overflow-scrolling:touch}
+.track::-webkit-scrollbar{display:none}
+.q{flex:0 0 min(640px,86%);scroll-snap-align:center;border:1px solid #25323c;border-radius:18px;padding:34px;background:#101a24;opacity:.38;transform:scale(.95);transition:opacity .35s,transform .35s,border-color .35s}
+.q.on{opacity:1;transform:none;border-color:rgba(255,176,32,.6)}
+.q blockquote{margin:0}
+.q h3{font-size:2rem;margin-bottom:14px;color:var(--accent)}
+.q p{font-size:1.15rem;line-height:1.55}
+.q hr{border:0;border-top:1px solid #2d3b47;margin:22px 0 14px}
+.q cite{font:500 .85rem var(--f-mono);font-style:normal;color:rgba(233,238,241,.75)}
+.ctl{display:flex;align-items:center;gap:14px;margin-top:26px}
+.ctl button.ar{width:48px;height:48px;border-radius:50%;border:1.5px solid #3a4a58;background:transparent;color:#e9eef1;font-size:1.2rem;cursor:pointer}
+.ctl button.ar:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.dots{display:flex;gap:8px;margin-left:8px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;background:#3a4a58;padding:0;cursor:pointer}
+.dots button[aria-current="true"]{background:var(--accent);width:26px;border-radius:6px}
+.tst small{display:block;margin-top:18px;color:rgba(233,238,241,.5);font-size:.78rem}
+
+/* FAQ */
+details{border-bottom:1px solid var(--line);padding:18px 0}
+details summary{cursor:pointer;font:600 1.1rem var(--f-body);list-style:none;display:flex;justify-content:space-between;gap:16px}
+details summary::after{content:"+";font:500 1.2rem var(--f-mono);color:var(--atext)}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin-top:10px;max-width:48em}
+
+/* CONTACT */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;gap:10px;align-content:start;min-width:0}
+.contact{display:grid;grid-template-columns:1.1fr .9fr;gap:40px}
+.form{display:grid;gap:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+textarea{min-height:100px;resize:vertical}
+.ok{background:var(--accent-soft);border-radius:10px;padding:14px 16px}
+.info dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+.info dt{color:var(--muted)}
+.info dd{margin:0;min-width:0;overflow-wrap:anywhere}
+footer{background:#000;color:#e9eef1;padding:28px max(16px,env(safe-area-inset-left,0px)) calc(28px + env(safe-area-inset-bottom,0px));font-size:.88rem;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+footer .in{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap}
+footer a{color:var(--accent)}
+
+@media (max-width:900px){
+  .estg,.contact,.split{grid-template-columns:1fr}
+  .split{gap:28px}.split .ph{aspect-ratio:4/3}
+  .two{grid-template-columns:1fr}
+  .pin{grid-template-columns:1fr;gap:4px;align-content:center}
+  .stack{max-height:50svh}
+  .leg li{display:none}.leg li[aria-current="true"]{display:grid}
+  .nav nav{display:none}
+  .cmp{aspect-ratio:4/3}
+  .facts{position:relative;right:auto;bottom:auto;margin:0 0 70px;align-self:flex-start}
+  .hbody{padding-bottom:30px}
+  .offers a{grid-template-columns:44px 1fr 28px;padding:22px 0}
+  .offers .d{grid-column:2/3;grid-row:2}
+  .offers .ar{grid-row:1;grid-column:3}
+  .offers .inl{display:block;grid-column:1/-1;aspect-ratio:16/9;object-fit:cover;width:100%;border-radius:12px;margin-top:8px}
+  .peek{display:none}
+}
+@media (hover:none){.peek{display:none}.offers .inl{display:block;grid-column:1/-1;aspect-ratio:16/9;object-fit:cover;width:100%;border-radius:12px;margin-top:8px}.offers a{grid-template-columns:44px 1fr 28px}.offers .d{grid-column:2/3}}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}.q{padding:24px}.facts div{padding:10px 12px}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  h1 .ln>span,.mq div,.hero .bg img{animation:none!important}
+  .offers a,.q,.peek,.peek img{transition:none}
+}
+</style>
+<link rel="stylesheet" href="css/extra.css">
+
+<div class="demo"><b>BEMUTATÓ OLDAL</b> · kitalált cég és példaadatok · így nézhet ki egy kivitelező saját weboldala · Készítette: Klement Forge</div>
+
+<header class="hero bleed" id="hero">
+  <div class="bg" id="heroBg"><img src="img/hero-facade.jpg" alt="Napelemes cserépfelület ferdén fölfelé, kék égbolt előtt" fetchpriority="high"></div>
+  <div class="in">
+    <div class="nav">
+      <div class="logo"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 21 20 6l17 15" fill="none" stroke="#ffb020" stroke-width="3.4" stroke-linejoin="round"/><path d="M9 20v15h22V20" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/></svg>Mintatető</div>
+      <nav aria-label="Fő menü"><a href="#retegek">Rétegek</a><a href="napelemes-tetocserep.html">Napelemes cserép</a><a href="napelem-szereles.html">Napelem szerelés</a><a href="tetoszerkezet.html">Tetőszerkezet</a><a href="#becslo">Árbecslő</a><a href="#gyik">Kérdések</a><a href="#kapcsolat">Kapcsolat</a></nav>
+      <a class="tel" href="tel:+36301234567">+36 30 123 4567</a>
+    </div>
+    <div class="hbody">
+      <h1><span class="ln"><span>Jó tető.</span></span><span class="ln"><span>Okos energia.</span></span><span class="ln"><span>Egy csapat.</span></span></h1>
+      <p class="lead">Tetőfedés, bádogozás és napelem egy kézből, a szarufától a panelig.</p>
+      <div class="cta"><a class="btn" href="#kapcsolat" data-contact>Ajánlatot kérek</a><a class="btn ghost" href="#retegek">Nézd meg, mi van a tető alatt</a></div>
+    </div>
+    <div class="facts"><div><b>24 óra</b><span>válasz az ajánlatkérésre</span></div><div><b>0 Ft</b><span>helyszíni felmérés</span></div><div><b>Írásos</b><span>garancia átadáskor</span></div></div>
+  </div>
+</header>
+
+<div class="mq bleed" aria-hidden="true"><div id="mq"></div></div>
+
+<section class="b" id="szerkezet"><div class="in split">
+  <div class="ph"><img data-par="-.06" src="img/pergola.jpg" alt="Acélszerkezet és napelemes üvegfelület alulról nézve" loading="lazy"></div>
+  <div>
+    <p class="tag">A szerkezet</p>
+    <h2 style="margin:10px 0 18px">A napelem csak akkor jó, ha alatta jó a tető</h2>
+    <p style="color:var(--muted);max-width:34em">A tető 30–50 évre készül, a napelem 25–30 évre. Ha a kettő nem egyszerre készül, a hibák a találkozásuknál jelennek meg: a rögzítésnél, a szegélyeknél, a kábelek átvezetésénél. Ezért egy csapat építi a szerkezetet és a napelemet is.</p>
+    <ul>
+      <li><b>01</b><span><strong>Felmérés előre.</strong> Szarufa, teherbírás, árnyékolás: számokkal, mielőtt ajánlatot adunk.</span></li>
+      <li><b>02</b><span><strong>Egy felelős.</strong> Nincs „a tetőfedő szerint a napelemes volt”.</span></li>
+      <li><b>03</b><span><strong>Írásos garancia.</strong> A kivitelezésre és az anyagokra átadáskor.</span></li>
+    </ul>
+  </div>
+</div></section>
+
+<div class="stackwrap bleed" id="retegek"><div class="pin"><div class="in" style="display:contents">
+  <canvas class="stack" id="stack" role="img" aria-label="Szétnyíló tetőrétegek rajza: szarufa, fólia, hőszigetelés, OSB, alátétfólia, lécezés, cserép, napelem"></canvas>
+  <div style="padding-right:max(16px,env(safe-area-inset-right,0px))">
+    <p class="tag">Görgess lefelé · a tető szétnyílik · alulról felfelé építkezünk</p>
+    <h2 style="margin:10px 0 16px">Nyolc réteg egy tetőben</h2>
+    <ol class="leg" id="leg"></ol>
+    <small>Szemléltető rajz. A pontos rétegrend a tető típusától és a hőtechnikai tervtől függ.</small>
+  </div>
+</div></div></div>
+
+<section class="band bleed" aria-label="Szlogen">
+  <div class="bg" id="bandBg"><img src="img/panels-close.jpg" alt="" loading="lazy"></div>
+  <div class="in">
+    <h2>Mi tudjuk, mi kell a jó tetőhöz!</h2>
+    <p>Egy megfelelően kivitelezett szerkezet, és rajta energia a napból!</p>
+  </div>
+</section>
+
+<section class="b pvs bleed" id="napelemes-cserep"><div class="in">
+  <div class="hd"><p class="tag">Újdonság · High-tech fedés</p><h2>Amikor maga a tető termel áramot</h2><p>A napelemes tetőcserép a fedés része: nincs ráépített panel, nincs külön tartószerkezet, a tető egybefüggő felületként néz ki. Még ritka megoldás, és drágább is. Nem mindenkinek ez a jó választás, ezért a felmérésen számokkal mutatjuk meg, megéri-e nálad.</p></div>
+  <div class="cmp" id="cmp">
+    <div class="l"><img src="img/house-panels.jpg" alt="Cserépfedésű ház tetején ráépített napelem-panelek" loading="lazy"></div>
+    <div class="r"><img src="img/pv-tile.jpg" alt="Cserépfedésbe integrált napelemes tetőcserép-sorok" loading="lazy"><span class="aitag">AI által generált kép</span></div>
+    <span class="cap a">Cserép + ráépített panel</span><span class="cap c">Napelemes tetőcserép</span>
+    <div class="h"></div>
+    <input id="cmpIn" type="range" min="4" max="96" value="50" aria-label="Összehasonlítás: húzd a csúszkát a két megoldás között">
+  </div>
+  <div class="two">
+    <div><h3>Cserép + ráépített panel</h3><ul><li>Alacsonyabb beruházási költség</li><li>Felületegységenként általában nagyobb teljesítmény</li><li>A panel külön cserélhető és bővíthető</li></ul></div>
+    <div><h3>Napelemes tetőcserép</h3><ul><li>Egybefüggő, esztétikus felület</li><li>Nincs külön tartószerkezet, a fedéssel egy lépésben készül</li><li>Magasabb beruházás, hosszabb megtérülés</li></ul></div>
+  </div>
+  <p style="margin-top:22px"><a class="btn" href="napelemes-tetocserep.html">Részletek a napelemes tetőcserépről →</a></p>
+  <p class="note">Bemutató tartalom, szemléltető fotókkal. Az éles oldalon a kínált termék típusa, garanciája és ára szerepel, a felmérés után pedig a te házadra szóló számítás.</p>
+</div></section>
+
+<section class="b" id="szolgaltatasok"><div class="in">
+  <div class="hd"><p class="tag">Szolgáltatások</p><h2>Egy kézben a tervezéstől a garanciáig</h2></div>
+  <ul class="offers" id="offers">
+    <li><a href="tetoszerkezet.html"><span class="n">01</span><span class="t">Tetőfedés</span><span class="d">Cserép, lemez és zsindely. Bontás, szarufa-javítás, szigetelés és fedés egy ütemben, szemétszállítással.</span><span class="ar" aria-hidden="true">→</span><span class="iw"><img class="inl" src="img/letezes.jpg" alt="Lécezett tetőfelület alátétfólián" loading="lazy"><span class="aitag">AI által generált kép</span></span></a></li>
+    <li><a href="napelem-szereles.html"><span class="n">02</span><span class="t">Napelem</span><span class="d">Tervezés, ügyintézés, telepítés, beüzemelés. A tetőt és a napelemet ugyanaz a csapat építi.</span><span class="ar" aria-hidden="true">→</span><span class="iw"><img class="inl" src="img/panels-close.jpg" alt="Napelem-panelek közelről" loading="lazy"></span></a></li>
+    <li><a href="napelemes-tetocserep.html"><span class="n">03</span><span class="t">Napelemes cserép</span><span class="d">A fedésbe épített, áramtermelő megoldás, ahol számít a megjelenés. Felmérés után számolunk rá.</span><span class="ar" aria-hidden="true">→</span><span class="iw"><img class="inl" src="img/pv-tile.jpg" alt="Napelemes tetőcserép sorok" loading="lazy"><span class="aitag">AI által generált kép</span></span></a></li>
+    <li><a href="tetoszerkezet.html"><span class="n">04</span><span class="t">Szerkezet és bádog</span><span class="d">Ács- és bádogos munkák, ereszcsatorna, kéményszegély. Méretre hajlítva, nem készletből illesztve.</span><span class="ar" aria-hidden="true">→</span><span class="iw"><img class="inl" src="img/badog.jpg" alt="Ereszcsatorna cserépfedésen" loading="lazy"><span class="aitag">AI által generált kép</span></span></a></li>
+  </ul>
+</div></section>
+<div class="peek" id="peek" aria-hidden="true"><img src="img/letezes.jpg" data-ai alt=""><img src="img/panels-close.jpg" alt=""><img src="img/pv-tile.jpg" data-ai alt=""><img src="img/badog.jpg" data-ai alt=""></div>
+
+<section class="b pvs bleed" id="becslo"><div class="in estg">
+  <div><p class="tag">Gyors árbecslő</p><h2 style="margin:10px 0 16px">Pár másodperc alatt ad egy tájékozódó sávot</h2><p style="color:var(--muted)">Válaszd ki a munkát, húzd a csúszkát, és látod a nagyságrendet. A pontos, tételes ajánlatot a helyszíni felmérés után kapod.</p></div>
+  <form class="est" onsubmit="return false">
+    <label for="kind">Mit szeretnél?
+      <select id="kind">
+        <option value="cserep">Tetőcsere cseréppel</option>
+        <option value="lemez">Tetőcsere trapézlemezzel</option>
+        <option value="bador">Bádogos munkák, ereszcsatorna</option>
+        <option value="napelem">Napelemes rendszer (ráépített panel)</option>
+        <option value="pv">Napelemes tetőcserép</option>
+      </select>
+    </label>
+    <label for="size"><span class="row2"><span id="sizeLabel">Tetőfelület</span><output id="sizeOut" for="size"></output></span><input id="size" type="range" min="30" max="300" step="5" value="120"></label>
+    <div class="out" aria-live="polite"><span class="s">Becsült ár, ÁFA nélkül</span><span class="p" id="price"></span><span class="s" id="days"></span></div>
+    <p style="font-size:.78rem;color:var(--muted)">Demó számítás példaértékekkel, nem valós árlista.</p>
+    <a class="btn" href="#kapcsolat" data-contact id="useEst" style="text-align:center">Pontos ajánlatot kérek ezzel</a>
+  </form>
+</div></section>
+
+<section class="tst bleed" id="velemenyek"><div class="tbg" aria-hidden="true"></div><svg class="ridge" viewBox="0 0 1200 84" preserveAspectRatio="none" aria-hidden="true"><path d="M0 80H40L110 26L180 80H300L350 46L420 80H540L610 18L700 80H820L880 40L950 80H1080L1140 30L1200 80"/></svg><div class="in"><span class="bigq" aria-hidden="true">„</span>
+  <p class="tag">Vélemények</p>
+  <h2>Amit az ügyfeleink mondanak</h2>
+  <div class="track" id="track" tabindex="0" aria-label="Vélemények, görgethető"><article class="q"><figure class="qi"><img src="img/atadas.jpg" alt="Átadás a családnak az inverter mellett" loading="lazy" style="object-position:58% 50%"><span class="aitag">AI által generált kép</span><figcaption class="tg">Tetőcsere és napelem · Pécs</figcaption></figure><blockquote><div class="st" aria-label="5 csillag">★★★★★</div><h3>„Pontosan az lett, amit megbeszéltünk”</h3><p>Előre megmondták az árat és a határidőt, és mindkettőt tartották. A tetőt és a napelemet ugyanaz a csapat csinálta, nem kellett senkit összehangolnom.</p><hr><cite>Kovács Péter, Pécs</cite></blockquote></article><article class="q"><figure class="qi"><img src="img/felmeres.jpg" alt="Szakember a padláson méri a szarufákat" loading="lazy" style="object-position:50% 40%"><span class="aitag">AI által generált kép</span><figcaption class="tg">Felmérés és napelem · Komló</figcaption></figure><blockquote><div class="st" aria-label="5 csillag">★★★★★</div><h3>„Végre valaki elmagyarázta”</h3><p>A felmérésen a számláim alapján megmutatták, mikor térülne meg a napelem. Nem akartak többet eladni, mint ami kell.</p><hr><cite>Szabó Anna, Komló</cite></blockquote></article><article class="q"><figure class="qi"><img src="img/letezes.jpg" alt="Rendezett léc- és fóliarétegek a tetőn" loading="lazy" style="object-position:50% 50%"><span class="aitag">AI által generált kép</span><figcaption class="tg">Tetőfelújítás · Szigetvár</figcaption></figure><blockquote><div class="st" aria-label="5 csillag">★★★★★</div><h3>„Rend volt a háznál”</h3><p>Naponta fotót küldtek az állásról, és a végén takarítva adták át a telket. Ilyet még nem láttam.</p><hr><cite>Horváth Gábor, Szigetvár</cite></blockquote></article><article class="q"><figure class="qi"><img src="img/uzembe.jpg" alt="Szakember méri az invertert" loading="lazy" style="object-position:50% 40%"><span class="aitag">AI által generált kép</span><figcaption class="tg">Napelem beüzemelés · Mohács</figcaption></figure><blockquote><div class="st" aria-label="5 csillag">★★★★★</div><h3>„A garancia papíron is ott van”</h3><p>Egy kisebb javításnál sem kellett kétszer szólni, másnap kijöttek és megnézték.</p><hr><cite>Nagy Mária, Mohács</cite></blockquote></article></div>
+  <div class="ctl"><button class="ar" id="prev" aria-label="Előző vélemény">←</button><button class="ar" id="next" aria-label="Következő vélemény">→</button><div class="dots" id="dots"></div><div class="prog" id="prog" aria-hidden="true"><i></i></div></div>
+  <small>Példa vélemények, kitalált nevekkel. Az éles oldalon valódi ügyfelek szerepelnek, a hozzájárulásukkal.</small>
+</div></section>
+
+<section class="b" id="gyik"><div class="in">
+  <div class="hd"><p class="tag">Kérdések</p><h2>Tető és napelem: amit előre érdemes tudni</h2></div>
+  <div style="max-width:800px">
+    <details><summary>Mikor érdemes a tetőt cserélni a napelem előtt?</summary><p>Ha a tető várhatóan a napelem élettartama alatt (25–30 év) felújításra szorul, érdemes előbb vagy egyszerre cserélni. Így nem kell később leszerelni, majd újra felszerelni a rendszert.</p></details>
+    <details><summary>Elbírja a tetőm a napelemet?</summary><p>A panelek súlya, a szél- és a hóteher a tartószerkezetre hat. A felmérésen megnézzük a szarufák állapotát és méretét, és ha kell, megerősítjük a szerkezetet.</p></details>
+    <details><summary>Nem ázik be a tető, ha átfúrják a napelem tartói?</summary><p>Szakszerű kivitelezésnél nem. A tartókat a cserép alatti szerkezethez rögzítjük, és a rögzítési pontokat tömítjük vagy lemezszegéllyel védjük. Ezért jó, ha a tetőfedő és a napelemes ugyanaz a csapat.</p></details>
+    <details><summary>Milyen tetőn termel a legtöbbet a napelem?</summary><p>A déli, 25–40 fokos tetőn jellemzően a legtöbbet, de a kelet-nyugati elrendezés is jó, mert egyenletesebben termel a nap folyamán. Az árnyékolást (fa, kémény, szomszéd épület) a tervezésnél figyelembe vesszük.</p></details>
+    <details><summary>Mennyi idő alatt térül meg a napelem?</summary><p>Az éves fogyasztástól, a rendszer méretétől és az áramár alakulásától függ. A felmérésen a számláid alapján megmutatjuk a számítást, és csak a saját adataidra adunk becslést.</p></details>
+    <details><summary>Cserép vagy lemez: melyiket válasszam?</summary><p>A cserép hosszú élettartamú és hagyományos megjelenésű, de nehezebb. A lemez könnyebb, gyorsabban lerakható és általában kedvezőbb árú, esőben viszont hangosabb, ezért szigetelésre külön figyelni kell.</p></details>
+    <details><summary>Mi a napelemes tetőcserép, és megéri?</summary><p>A fedés részeként termel áramot, nincs ráépített panel. Egybefüggő, szép felületet ad, de általában magasabb a beruházás és hosszabb a megtérülés. A felmérés után megmondjuk, a te házadnál érdemes-e ezt választani.</p></details>
+    <details><summary>Kell hozzá engedély, és ki intézi?</summary><p>A napelemes rendszer üzembe helyezéséhez az áramszolgáltatóval egyeztetni kell, a mérettől függően más hatósági lépések is jöhetnek. Az ügyintézést átvállaljuk, neked csak aláírni kell.</p></details>
+    <details><summary>Milyen garanciát kapok?</summary><p>A kivitelezésre és az anyagokra írásos garanciát adunk átadáskor. A panelekre és az inverterre a gyártó garanciája érvényes, ezek feltételeit az ajánlatban külön feltüntetjük.</p></details>
+  </div>
+</div></section>
+
+<section class="b pvs bleed" id="kapcsolat"><div class="in contact map2">
+  <div class="cinfo">
+    <div class="hd" style="margin-bottom:18px"><p class="tag">Kapcsolat</p><h2>Itt találsz minket</h2></div>
+    <a class="tel2" href="tel:+36301234567">+36 30 123 4567</a>
+    <p class="adr">7632 Pécs, Tetőfedő utca 4.</p>
+    <div class="info card"><h3>Elérhetőségek</h3>
+      <dl><dt>Telefon</dt><dd><a href="tel:+36301234567">+36 30 123 4567</a></dd><dt>E-mail</dt><dd>info@minta-teto.example</dd><dt>Cím</dt><dd>7632 Pécs, Tetőfedő utca 4.</dd><dt>H–P</dt><dd>7:00–16:00</dd><dt>Szombat</dt><dd>Egyeztetés szerint</dd><dt>Terület</dt><dd>Baranya és a környező megyék</dd></dl>
+      <p>Sürgős beázásnál telefonon is elérhetünk, ilyenkor a legközelebbi szabad időpontra jövünk ki.</p></div>
+    <div class="btns"><a class="btn" href="#kapcsolat" data-contact>Ajánlatot kérek</a><a class="btn ghost" href="tel:+36301234567">Hívás most</a></div>
+  </div>
+  <figure class="map"><svg viewBox="0 0 640 440" role="img" aria-label="Szemléltető térkép: Pécs, Tetőfedő utca 4., a főúttól leágazó utca végén">
+<defs>
+<pattern id="cp" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(24)"><line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" stroke-opacity=".13" stroke-width="2"/></pattern>
+<path id="sp" d="M392 142C396 200 400 235 430 262S520 300 575 300"/>
+</defs>
+<g style="color:var(--m-label)">
+<rect class="m-land" width="640" height="440"/>
+<polygon class="m-f1" points="0,0 300,0 292,130 150,142 0,150"/><polygon points="0,0 300,0 292,130 150,142 0,150" fill="url(#cp)"/>
+<polygon class="m-f2" points="300,0 640,0 640,106 470,128 292,130"/><polygon points="300,0 640,0 640,106 470,128 292,130" fill="url(#cp)" transform="rotate(0)"/>
+<polygon class="m-f2" points="0,156 236,170 248,296 0,306"/><polygon points="0,156 236,170 248,296 0,306" fill="url(#cp)"/>
+<polygon class="m-f3" points="250,172 392,176 396,250 428,280 300,318 252,300"/>
+<polygon class="m-f1" points="404,178 640,150 640,320 580,310 470,300 436,268"/><polygon points="404,178 640,150 640,320 580,310 470,300 436,268" fill="url(#cp)"/>
+<polygon class="m-f3" points="0,312 260,322 300,330 340,440 0,440"/>
+<polygon class="m-f2" points="344,336 640,330 640,440 352,440"/><polygon points="344,336 640,330 640,440 352,440" fill="url(#cp)"/>
+<path class="m-water" d="M-10 376C80 344 150 396 250 370S410 326 520 356S620 384 650 376" opacity=".95"/>
+<g class="m-tree"><circle cx="34" cy="52" r="9"/><circle cx="52" cy="44" r="11"/><circle cx="70" cy="58" r="9"/><circle cx="46" cy="70" r="8"/><circle cx="92" cy="40" r="8"/><circle cx="560" cy="60" r="10"/><circle cx="580" cy="48" r="9"/><circle cx="598" cy="66" r="11"/><circle cx="574" cy="78" r="8"/><circle cx="44" cy="404" r="10"/><circle cx="66" cy="414" r="9"/><circle cx="90" cy="402" r="8"/><circle cx="296" cy="236" r="6"/><circle cx="308" cy="248" r="5"/><circle cx="322" cy="238" r="6"/></g>
+<path class="m-case" d="M-10 150C160 140 330 170 470 128S600 100 650 108"/><path class="m-road" d="M-10 150C160 140 330 170 470 128S600 100 650 108"/>
+<path class="m-case" d="M392 142C396 200 400 235 430 262S520 300 575 300" style="stroke-width:13"/><path class="m-minor" d="M392 142C396 200 400 235 430 262S520 300 575 300"/>
+<path class="m-case" d="M575 300C600 300 620 292 650 286" style="stroke-width:9;stroke-dasharray:3 5"/>
+<rect class="m-bld" x="452" y="240" width="24" height="16" rx="2" transform="rotate(8 464 248)"/>
+<rect class="m-bld" x="530" y="268" width="22" height="16" rx="2" transform="rotate(2 541 276)"/>
+<rect class="m-bld" x="570" y="268" width="20" height="15" rx="2"/>
+<rect class="m-bld" x="476" y="310" width="20" height="14" rx="2"/>
+<rect class="m-bld" x="410" y="196" width="16" height="12" rx="2"/>
+<rect class="m-bld" x="486" y="254" width="30" height="20" rx="2" style="fill:#ffd37a;stroke:#8a5a00;stroke-width:1.2"/>
+<text class="m-t2" x="460" y="236" text-anchor="middle">2</text><text class="m-t2" x="501" y="249" text-anchor="middle" style="font-weight:700">4</text><text class="m-t2" x="541" y="262" text-anchor="middle">6</text>
+<text class="m-t" dy="17"><textPath href="#sp" startOffset="60%">Tetőfedő utca</textPath></text>
+<text class="m-t2" x="22" y="132" transform="rotate(-3 22 132)">← Pécs, 9 km</text>
+<text class="m-t2" x="520" y="96" transform="rotate(-6 520 96)">Tettye út →</text>
+<g class="m-ring-g"><ellipse class="m-ring" cx="501" cy="274" rx="14" ry="8"/></g>
+<g class="m-pin"><path d="M501 274C488 256 485 248 485 242a16 16 0 1 1 32 0C517 248 514 256 501 274Z" fill="#ffb020" stroke="#8a5a00" stroke-width="1.6"/><circle cx="501" cy="242" r="6" fill="#111a22"/></g>
+<g transform="translate(413 160)"><rect width="176" height="42" rx="9" fill="var(--surface)" stroke="var(--line)"/><text x="12" y="18" style="font:700 12px var(--f-body,sans-serif);fill:var(--ink)">Mintatető Kft.</text><text x="12" y="34" style="font:500 11px var(--f-body,sans-serif);fill:var(--ink)">7632 Pécs, Tetőfedő utca 4.</text></g>
+<g transform="translate(598 38)"><circle r="17" fill="var(--surface)" stroke="var(--line)"/><path d="M0-12L5 3H0H-5Z" fill="#ffb020"/><path d="M0-12L5 3L0 0Z" fill="#8a5a00"/><text class="m-t2" y="14" text-anchor="middle" style="font-size:8px;font-weight:700">É</text></g>
+<g transform="translate(24 410)"><line x1="0" y1="0" x2="70" y2="0" stroke="currentColor" stroke-width="2"/><line x1="0" y1="-4" x2="0" y2="4" stroke="currentColor" stroke-width="2"/><line x1="70" y1="-4" x2="70" y2="4" stroke="currentColor" stroke-width="2"/><text class="m-t2" x="35" y="-8" text-anchor="middle">100 m</text></g>
+</g></svg>
+<figcaption>Szemléltető térkép · kitalált cím</figcaption></figure>
+</div></section>
+
+<footer><div class="in"><span>© Mintatető Kft. · kitalált cég, bemutató célú oldal</span><span>Weboldal: <a href="https://klementforge.com">Klement Forge</a></span></div></footer>
+
+<script src="js/stack.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const nf=new Intl.NumberFormat("hu-HU");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),sm=t=>{t=clamp(t,0,1);return t*t*(3-2*t)};
+$("#mq").innerHTML=Array(2).fill(["Tetőfedés","Bádogozás","Napelem","Napelemes tetőcserép","Hőszigetelés","Felmérés 0 Ft-ért"].map(x=>`<span>${x}</span>`).join("")).join("");
+
+initStack({wrap:"#retegek",canvas:"#stack",leg:"#leg",variant:"full"});
+/* ================= Görgetés, egér ================= */
+let raf=0;
+function onScroll(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;
+  const sy=scrollY;
+  if(!RM){$("#heroBg").style.transform=`translate3d(0,${sy*.18}px,0)`;
+    $$("[data-par]").forEach(el=>{const r=el.parentElement.getBoundingClientRect(),c=r.top+r.height/2-innerHeight/2;el.style.transform=`translate3d(0,${c*(+el.dataset.par)}px,0)`});
+    const b=$("#bandBg"),br=b.parentElement.getBoundingClientRect();b.style.transform=`translate3d(0,${(br.top+br.height/2-innerHeight/2)*-.12}px,0)`}
+})}
+addEventListener("scroll",onScroll,{passive:true});
+if(!RM)$("#hero").addEventListener("pointermove",e=>{const r=e.currentTarget.getBoundingClientRect(),h=$("#hero");h.style.setProperty("--mx",((e.clientX-r.left)/r.width*100)+"%");h.style.setProperty("--my",((e.clientY-r.top)/r.height*100)+"%")});
+onScroll();
+
+/* ================= Napelemes cserép csúszka ================= */
+$("#cmpIn").addEventListener("input",e=>$("#cmp").style.setProperty("--x",e.target.value+"%"));
+
+/* ================= Hover-képes szolgáltatáslista ================= */
+(function(){const pk=$("#peek"),im=$$("#peek img");let tx=0,ty=0,px=0,py=0,run=false;
+  function loop(){px+=(tx-px)*.15;py+=(ty-py)*.15;pk.style.transform=`translate3d(${px+30}px,${py-110}px,0) rotate(${clamp((tx-px)*.05,-6,6)}deg)`;if(run)requestAnimationFrame(loop)}
+  $$("#offers li").forEach((li,i)=>{li.addEventListener("pointerenter",e=>{if(e.pointerType==="touch")return;tx=px=e.clientX;ty=py=e.clientY;pk.classList.add("on");im.forEach((m,j)=>m.classList.toggle("on",j===i));if(!run){run=true;loop()}});
+    li.addEventListener("pointerleave",()=>{pk.classList.remove("on");run=false})});
+  $("#offers").addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY})})();
+
+/* ================= Vélemény-karusszel (automatikus lapozással) ================= */
+(function(){const tr=$("#track"),qs=$$(".q"),dots=$("#dots"),pg=$("#prog"),sec=$("#velemenyek");const DUR=6500;let cur=0,timer=0,vis=false,st=0;const hold=new Set();
+  dots.innerHTML=qs.map((_,i)=>`<button aria-label="${i+1}. vélemény"></button>`).join("");const db=[...dots.children];
+  const x=i=>{const q=qs[i];return q.offsetLeft-(tr.clientWidth-q.offsetWidth)/2};
+  function stop(){clearTimeout(timer);pg.classList.remove("run")}
+  function restart(){stop();if(RM||!vis||hold.size||document.hidden)return;pg.style.setProperty("--ap",DUR+"ms");void pg.offsetWidth;pg.classList.add("run");timer=setTimeout(()=>go((cur+1)%qs.length,cur===qs.length-1),DUR)}
+  function mark(i){cur=i;qs.forEach((q,j)=>q.classList.toggle("on",j===i));db.forEach((d,j)=>d.setAttribute("aria-current",j===i));restart()}
+  function go(i,jump){i=clamp(i,0,qs.length-1);tr.scrollTo({left:x(i),behavior:(RM||jump)?"auto":"smooth"});if(jump)mark(i)}
+  function near(){const c=tr.getBoundingClientRect(),m=c.left+c.width/2;let b=0,bd=1e9;qs.forEach((q,i)=>{const r=q.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-m);if(d<bd){bd=d;b=i}});if(b!==cur)mark(b)}
+  tr.addEventListener("scroll",()=>{clearTimeout(st);st=setTimeout(near,90)},{passive:true});
+  $("#prev").onclick=()=>go(cur-1);$("#next").onclick=()=>go(cur+1);db.forEach((d,i)=>d.onclick=()=>go(i));
+  tr.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){e.preventDefault();go(cur+1)}if(e.key==="ArrowLeft"){e.preventDefault();go(cur-1)}});
+  const H=(k,on)=>{on?hold.add(k):hold.delete(k);on?stop():restart()};
+  sec.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")H("hover",1)});sec.addEventListener("pointerleave",()=>H("hover",0));
+  sec.addEventListener("focusin",()=>H("focus",1));sec.addEventListener("focusout",()=>H("focus",0));
+  tr.addEventListener("touchstart",()=>H("touch",1),{passive:true});tr.addEventListener("touchend",()=>setTimeout(()=>H("touch",0),2500),{passive:true});
+  document.addEventListener("visibilitychange",restart);
+  if("IntersectionObserver" in window)new IntersectionObserver(es=>{vis=es[0].isIntersecting;restart()},{threshold:.35}).observe(sec);
+  tr.scrollLeft=x(0);mark(0)})();
+
+/* ================= Árbecslő ================= */
+const PR={cserep:{u:"m²",min:30,max:300,step:5,def:120,lo:21000,hi:29000,d:v=>Math.ceil(v/40)+2},
+lemez:{u:"m²",min:30,max:400,step:5,def:140,lo:12000,hi:18000,d:v=>Math.ceil(v/60)+1},
+bador:{u:"fm",min:10,max:120,step:2,def:40,lo:6500,hi:10500,d:v=>Math.ceil(v/40)+1},
+napelem:{u:"kW",min:3,max:15,step:1,def:6,lo:420000,hi:520000,d:v=>Math.ceil(v/3)+1},
+pv:{u:"m²",min:20,max:120,step:2,def:50,lo:70000,hi:110000,d:v=>Math.ceil(v/12)+3}};
+const LB={cserep:"Tetőfelület",lemez:"Tetőfelület",bador:"Csatorna, szegély hossza",napelem:"Rendszerméret",pv:"Napelemes felület"};
+function upd(){const k=$("#kind").value,p=PR[k],v=+$("#size").value,r=n=>Math.round(n/10000)*10000;
+ $("#sizeLabel").textContent=LB[k];$("#sizeOut").textContent=v+" "+p.u;
+ $("#price").textContent=nf.format(r(v*p.lo))+" – "+nf.format(r(v*p.hi))+" Ft";
+ $("#days").textContent="Várható kivitelezési idő: kb. "+p.d(v)+" munkanap"}
+$("#kind").addEventListener("change",()=>{const p=PR[$("#kind").value],s=$("#size");s.min=p.min;s.max=p.max;s.step=p.step;s.value=p.def;upd()});
+$("#size").addEventListener("input",upd);upd();
+</script>
+<script src="js/extra.js"></script>
+
+</body></html>
