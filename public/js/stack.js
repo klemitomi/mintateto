@@ -91,7 +91,7 @@ window.initStack=function(o){
   legEl.innerHTML=LAY.map((l,i)=>`<li data-i="${i}"><b>0${i+1}</b><div><strong>${l.n}</strong><span>${l.d}</span></div></li>`).join("");
   cv.style.aspectRatio=LW+"/"+LH;
   let K=1,lastAct=-2;
-  function fit(){const w=cv.clientWidth||600,d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(w*d);cv.height=Math.round(w*d*LH/LW);K=cv.width/LW}
+  function fit(){const w=cv.clientWidth||600,d=Math.min(devicePixelRatio||1,1.5);cv.width=Math.round(w*d);cv.height=Math.round(w*d*LH/LW);K=cv.width/LW}
   function poly(pts,fill){cx.beginPath();pts.forEach((q,i)=>i?cx.lineTo(q[0],q[1]):cx.moveTo(q[0],q[1]));cx.closePath();cx.fillStyle=fill;cx.fill()}
   function edges(u0,v0,u1,v1,t,dy,cf,cr){poly([P(u0,v0,dy),P(u1,v0,dy),P(u1,v0,dy+t),P(u0,v0,dy+t)],cf);poly([P(u1,v0,dy),P(u1,v1,dy),P(u1,v1,dy+t),P(u1,v0,dy+t)],cr)}
   function edgesL(X,Y,W,H,t,dy,cf,cr){edges(X,TH-Y-H,X+W,TH-Y,t,dy,cf,cr)}
@@ -100,7 +100,7 @@ window.initStack=function(o){
   function sweep(dy,p,clipRects){lm(dy);cx.save();if(clipRects){cx.beginPath();clipRects.forEach(q=>cx.rect(q[0],q[1],q[2],q[3]));cx.clip()}
     const sx=((p*4)%1)*(TW+300)-150,g=cx.createLinearGradient(sx-90,0,sx+90,0);g.addColorStop(0,"rgba(255,255,255,0)");g.addColorStop(.5,"rgba(255,255,255,.13)");g.addColorStop(1,"rgba(255,255,255,0)");
     cx.globalCompositeOperation="lighter";cx.fillStyle=g;cx.fillRect(0,0,TW,TH);cx.restore();cx.setTransform(K,0,0,K,0,0)}
-  function shadowOn(e){cx.shadowColor="rgba(0,0,0,"+(.42*e)+")";cx.shadowBlur=26*e*K;cx.shadowOffsetY=GAP*.7*e*K;cx.shadowOffsetX=NX*GAP*.7*e*K}
+  function shadowOn(e){cx.shadowColor="rgba(0,0,0,"+(.42*e)+")";cx.shadowBlur=14*e*K;cx.shadowOffsetY=GAP*.7*e*K;cx.shadowOffsetX=NX*GAP*.7*e*K}
   function shadowOff(){cx.shadowColor="transparent";cx.shadowBlur=0;cx.shadowOffsetY=0;cx.shadowOffsetX=0}
   function drawKind(k,dy,e,p){
     shadowOn(e);
@@ -115,15 +115,16 @@ window.initStack=function(o){
     else{edges(8,0,TW-8,TH,4,dy+8,"#6f7a83","#5a646c");drawTop(TEX.rail,dy+8);shadowOff();shadowOn(e*.6);PVM.forEach(m=>edgesL(m[0],m[1],m[2],m[3],8,dy,"#b9c3ca","#7f8a93"));drawTop(TEX.pv,dy);shadowOff();sweep(dy,p,PVM)}
     shadowOff()}
   function render(p){
-    const e=sm(p/.3),act=p<.3?-1:Math.min(LAY.length-1,Math.floor((p-.3)/.7*LAY.length));
+    const e=sm(p/.3),f=(p-.3)/.7*LAY.length,act=p<.3?-1:Math.min(LAY.length-1,Math.floor(f));
+    const wt=i=>p<.3?0:clamp(1.15-Math.abs(f-(i+.5))*1.7,0,1);
     cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);cx.setTransform(K,0,0,K,0,0);
     const gp=P(TW*.5,TH*.4,40),gr=cx.createRadialGradient(gp[0],gp[1],10,gp[0],gp[1],430);gr.addColorStop(0,"rgba(0,0,0,.5)");gr.addColorStop(1,"rgba(0,0,0,0)");
     cx.save();cx.translate(gp[0],gp[1]);cx.scale(1,.3);cx.translate(-gp[0],-gp[1]);cx.fillStyle=gr;cx.beginPath();cx.arc(gp[0],gp[1],430,0,7);cx.fill();cx.restore();
     let tp=0;const dys=[];
     LAY.forEach((L,i)=>{if(i)tp-=L.t;const dy=tp-e*i*GAP;dys.push(dy);
-      cx.globalAlpha=(act>=0&&i!==act)?.72:1;drawKind(KS[i],dy,e,p);cx.globalAlpha=1});
+      cx.globalAlpha=1-.28*(1-wt(i))*(p<.3?0:1);drawKind(KS[i],dy,e,p);cx.globalAlpha=1});
     LAY.forEach((L,i)=>{const dy=dys[i],on=i===act;
-      if(on){cx.strokeStyle="#ffb020";cx.lineWidth=3;cx.beginPath();[[0,0],[TW,0],[TW,TH],[0,TH]].forEach((q,j)=>{const a=P(q[0],q[1],dy);j?cx.lineTo(a[0],a[1]):cx.moveTo(a[0],a[1])});cx.closePath();cx.stroke()}
+      const w=wt(i);if(w>.01){cx.globalAlpha=w;cx.strokeStyle="#ffb020";cx.lineWidth=3;cx.beginPath();[[0,0],[TW,0],[TW,TH],[0,TH]].forEach((q,j)=>{const a=P(q[0],q[1],dy);j?cx.lineTo(a[0],a[1]):cx.moveTo(a[0],a[1])});cx.closePath();cx.stroke();cx.globalAlpha=1}
       if(e>.3){const a=P(TW,TH*.5,dy+(L.h||L.t)/2),al=clamp((e-.3)/.4,0,1);cx.globalAlpha=al*(act>=0&&!on?.6:1);
         cx.strokeStyle=on?"#ffb020":"#8896a1";cx.lineWidth=1.5;cx.setLineDash([3,3]);cx.beginPath();cx.moveTo(a[0],a[1]);cx.lineTo(a[0]+34,a[1]);cx.stroke();cx.setLineDash([]);
         cx.fillStyle=on?"#ffb020":"#26323c";cx.beginPath();cx.arc(a[0]+48,a[1],14,0,7);cx.fill();cx.fillStyle=on?"#111a22":"#e9eef1";cx.font="500 13px 'JetBrains Mono',monospace";cx.textAlign="center";cx.textBaseline="middle";cx.fillText(i+1,a[0]+48,a[1]+1);cx.globalAlpha=1}});
@@ -131,10 +132,15 @@ window.initStack=function(o){
   }
   function stackP(){const r=wrap.getBoundingClientRect(),tot=r.height-innerHeight;return clamp(-r.top/tot,0,1)}
   let raf=0;
-  function tick(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;render(stackP())})}
+  function lockLeg(){legEl.style.minHeight="";const keep=[...legEl.children].findIndex(li=>li.getAttribute("aria-current")==="true");let m=0;
+    [...legEl.children].forEach((li,i)=>{[...legEl.children].forEach((x,j)=>x.setAttribute("aria-current",i===j?"true":"false"));m=Math.max(m,legEl.getBoundingClientRect().height)});
+    [...legEl.children].forEach((x,j)=>x.setAttribute("aria-current",j===keep?"true":"false"));legEl.style.minHeight=Math.ceil(m)+"px"}
+  let cur=stackP();
+  function loop(){raf=0;const t=stackP(),d=t-cur;cur=Math.abs(d)<.0008?t:cur+d*.22;render(cur);if(cur!==t)raf=requestAnimationFrame(loop)}
+  function tick(){if(raf)return;raf=requestAnimationFrame(loop)}
   addEventListener("scroll",tick,{passive:true});
-  addEventListener("resize",()=>{fit();render(stackP())});
-  fit();render(stackP());
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>render(stackP()));
+  addEventListener("resize",()=>{fit();lockLeg();cur=stackP();render(cur)});
+  fit();lockLeg();render(stackP());
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{lockLeg();render(stackP())});
 };
 })();
